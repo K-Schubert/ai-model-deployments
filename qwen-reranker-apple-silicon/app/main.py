@@ -28,15 +28,15 @@ class InferenceRequest(BaseModel):
 
 @app.post("/infer")
 async def infer(req: InferenceRequest):
-    # 1️⃣  Build the plain-text prompts for each (query, document) pair
+    # Build the plain-text prompts for each (query, document) pair
     formatted_pairs = [
         format_instruction(req.instruction, p.query, p.document) for p in req.pairs
     ]
 
-    # 2️⃣  Tokenise + pad so everything is on the model’s device
+    # Tokenise + pad so everything is on the model’s device
     inputs = process_inputs(formatted_pairs, max_length=req.max_length)
 
-    # 3️⃣  Forward pass → probability that the correct answer is **“yes”**
+    # Forward pass → probability that the correct answer is **“yes”**
     scores = compute_logits(inputs)
 
     return {"scores": scores}

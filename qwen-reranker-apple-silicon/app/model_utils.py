@@ -19,8 +19,8 @@ _MODEL_NAME = "Qwen/Qwen3-Reranker-0.6B"
 tokenizer = AutoTokenizer.from_pretrained(_MODEL_NAME, padding_side="left")
 model = AutoModelForCausalLM.from_pretrained(_MODEL_NAME).eval()
 
-# Place the model on GPU if available; otherwise CPU
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Place the model on CPU
+device = torch.device("cpu")
 model.to(device)
 
 # ---------------------------------------------------------------------
@@ -104,7 +104,7 @@ def compute_logits(inputs) -> list[float]:
     Forward pass and convert the last-token logits to probabilities.
 
     The output is a list of probabilities (one per input) that the
-    answer is **“yes”** (True).  Equivalent to the old vLLM score.
+    answer is **“yes”** (True).
     """
     # logits shape: (batch, sequence, vocab)
     logits = model(**inputs).logits[:, -1, :]
